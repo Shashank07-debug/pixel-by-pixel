@@ -90,6 +90,13 @@
     line-height: 1.5;      
     color: #333;           
 }
+.grid-container img {
+    width: 100%;           
+    height: auto;         
+    margin-top: 10px;    
+    border-radius: 5px;  
+    justify-content: center;
+}
 @media (max-width: 900px) {
     .grid-container {
         grid-template-areas:
