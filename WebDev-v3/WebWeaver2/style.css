@@ -1,0 +1,133 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.main{
+    padding: 20px;
+    border: 2px solid black;
+    margin: 40px;
+    border-radius: 10px;
+}
+.heading {
+    text-align: center;        
+    font-size: 36px;          
+    margin-top: 20px;         
+    margin-bottom: 20px;      
+    font-family: "Bitcount Prop Single", sans-serif;
+    font-weight: 700;     
+    color: rgb(11, 11, 11);
+          
+}
+
+.navbar {
+    list-style: none;   
+    display: flex;      
+    gap: 20px;          
+    padding: 0;         
+    margin: 0;    
+    border: 2px solid black;
+    margin: 10px;
+    padding: 30px;
+    list-style: none;
+    justify-content: space-between;   
+}
+.navbar a {
+    transition: all 0.2s ease;
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    font-size: 19px;
+}
+.navbar a:hover{
+    text-decoration: solid underline;
+    text-decoration-thickness: 2px;   
+    text-underline-offset: 4px;   
+    color: black;
+    font-weight: bold;
+    font-size: 19px;
+}
+.story_1{
+    grid-area: area1;
+}
+.story_2{
+    grid-area: area2;
+}
+.story_3{
+    grid-area: area3;
+}
+.story_4{
+    grid-area: area4;
+}
+.story_5{
+    grid-area: area5;
+}
+.grid-container {
+    display: grid;
+    grid-template-areas:
+        'area1 area2 area3'
+        'area4 area5 area5';
+    gap: 10px;
+    padding: 10px;
+}
+
+.grid-container article {
+    border: 2px solid black;     
+    padding: 15px;              
+}
+.grid-container > * {
+    margin: 0;
+}
+.grid-container h2 {
+    font-size: 24px;         
+    margin-bottom: 10px;   
+    font-family: "Playwrite NO", cursive;
+    text-align: center;
+}
+.grid-container p {
+    font-size: 16px;        
+    line-height: 1.5;      
+    color: #333;           
+}
+@media (max-width: 900px) {
+    .grid-container {
+        grid-template-areas:
+            "area1 area2"
+            "area3 area3"
+            "area4 area5";
+            grid-template-columns: 1fr 1fr;
+    }
+    .navbar {
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+     }
+     .heading{
+        font-size: 30px;
+     }
+    
+}
+@media (max-width: 600px) {
+    .grid-container {
+        grid-template-areas:
+            "area1"
+            "area2"
+            "area3"
+            "area4"
+            "area5";
+            grid-template-columns: 1fr;
+    }
+    .navbar {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        padding: 15px;
+     }
+     .navbar a {
+        font-size: 16px;
+     }
+     .heading{
+        font-size: 24px;
+     }
+}
