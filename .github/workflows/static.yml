@@ -1,4 +1,4 @@
-name: Deploy WebWeaver Projects (Team Carousel Edition)
+name: Deploy WebWeaver Projects (3D Homepage)
 
 on:
   push:
@@ -39,272 +39,123 @@ jobs:
           cp -r WebDev-v3/WebWeaver7 public/WebWeaver7
           cp -r WebDev-v3/WebWeaver8 public/WebWeaver8
 
-          # ============================================
-          # CREATE FULL INLINE HTML (YOUR CODE + CSS + JS)
-          # ============================================
+          # ---------------------------------------
+          # CREATE 3D ANIMATED HOMEPAGE (INLINE)
+          # ---------------------------------------
           cat << 'EOF' > public/index.html
           <!DOCTYPE html>
           <html lang="en">
           <head>
-              <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>Pixel-by-Pixel Projects</title>
+              <meta charset="UTF-8" />
+              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+              <title>Pixel-by-Pixel 3D Projects</title>
 
               <style>
-                /* ---------------- GLOBAL + FLOAT BUTTON ---------------- */
-                * { margin:0; padding:0; box-sizing:border-box; }
+                  body {
+                      margin: 0;
+                      background: radial-gradient(circle at center, #020617, #000);
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                      min-height: 100vh;
+                      overflow-x: hidden;
+                      font-family: "Orbitron", sans-serif;
+                      color: #00eaff;
+                  }
 
-                #super-btn {
-                    position: fixed;
-                    right: 32px;
-                    bottom: 32px;
-                    z-index: 1000;
-                    display: inline-block;
-                    border-radius: 18px;
-                    overflow: hidden;
-                    box-shadow: 0 2px 12px rgba(0,0,0,0.18);
-                    width: 56px;
-                    height: 56px;
-                    background: #fff;
-                    transition: 0.2s;
-                }
-                #super-btn:hover { transform:scale(1.07); box-shadow:0 4px 24px rgba(0,0,0,0.3); }
-                #super-btn img { width:100%; height:100%; object-fit:cover; border-radius:16px; }
+                  h1 {
+                      position: absolute;
+                      top: 40px;
+                      font-size: 42px;
+                      text-shadow: 0 0 25px cyan;
+                      animation: glow 3s infinite ease-in-out;
+                  }
 
-                body {
-                    background:#f5f5f5;
-                    min-height:100vh;
-                    display:flex;
-                    flex-direction:column;
-                    justify-content:center;
-                    align-items:center;
-                    overflow:hidden;
-                    padding:20px 0;
-                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-                }
+                  @keyframes glow {
+                      0%,100% { text-shadow: 0 0 20px cyan, 0 0 40px #00eaff; }
+                      50% { text-shadow: 0 0 40px cyan, 0 0 60px #00eaff; }
+                  }
 
-                /* ---------------- MAIN LAYOUT ---------------- */
-                .main-container {
-                    display:flex;
-                    width:100%;
-                    max-width:1200px;
-                    height:80vh;
-                    gap:60px;
-                    align-items:center;
-                    justify-content:center;
-                }
+                  .grid {
+                      display: grid;
+                      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+                      gap: 35px;
+                      width: 90%;
+                      max-width: 1100px;
+                      padding: 40px;
+                      z-index: 10;
+                  }
 
-                .carousel-section { flex:1; display:flex; justify-content:center; }
-                .controls-section { flex:1; display:flex; flex-direction:column; align-items:center; gap:40px; }
+                  /* 3D PROJECT CARD */
+                  .card {
+                      height: 160px;
+                      border-radius: 18px;
+                      background: rgba(0, 30, 40, 0.7);
+                      border: 2px solid cyan;
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                      font-size: 24px;
+                      text-decoration: none;
+                      color: cyan;
+                      transition: 0.3s ease-out;
+                      box-shadow: 0 0 18px #002a35;
+                      position: relative;
+                      transform-style: preserve-3d;
+                  }
 
-                /* ---------------- CAROUSEL ---------------- */
-                .carousel-container {
-                    width:100%;
-                    max-width:500px;
-                    height:70vh;
-                    position:relative;
-                    perspective:1000px;
-                    display:flex;
-                    flex-direction:column;
-                    align-items:center;
-                }
+                  .card:hover {
+                      transform: rotateY(18deg) rotateX(10deg) scale(1.06);
+                      box-shadow: 0 0 25px cyan, 0 0 60px #00eaff;
+                      background: cyan;
+                      color: black;
+                  }
 
-                .carousel-container .nav-arrow { display:none; }
+                  /* Floating particles */
+                  .particle {
+                      position: fixed;
+                      width: 6px;
+                      height: 6px;
+                      background: cyan;
+                      border-radius: 50%;
+                      animation: floatUp 9s linear infinite;
+                      opacity: 0.6;
+                  }
 
-                .carousel-track {
-                    width:450px;
-                    height:100%;
-                    position:relative;
-                    transform-style:preserve-3d;
-                    transition:transform 0.8s cubic-bezier(.25,.46,.45,.94);
-                }
-
-                .card {
-                    position:absolute;
-                    width:400px;
-                    height:225px;
-                    background:white;
-                    border-radius:20px;
-                    overflow:hidden;
-                    box-shadow:0 20px 40px rgba(0,0,0,0.15);
-                    transition:0.8s cubic-bezier(.25,.46,.45,.94);
-                    cursor:pointer;
-                }
-
-                .card img { width:100%; height:100%; object-fit:cover; }
-
-                .card.center { z-index:10; transform:scale(1.1); }
-                .card.up-1 { transform:translateY(-150px) scale(0.9) translateZ(-100px); opacity:0.9; }
-                .card.up-2 { transform:translateY(-300px) scale(0.8) translateZ(-300px); opacity:0.7; }
-                .card.down-1 { transform:translateY(150px) scale(0.9) translateZ(-100px); opacity:0.9; }
-                .card.down-2 { transform:translateY(300px) scale(0.8) translateZ(-300px); opacity:0.7; }
-                .card.hidden { opacity:0; pointer-events:none; }
-
-                /* ---------------- MEMBER INFO ---------------- */
-                .member-info { text-align:center; transition:0.5s; }
-                .member-name { font-size:2rem; font-weight:700; color:rgb(8,42,123); }
-                .member-role { font-size:1.2rem; opacity:0.7; }
-
-                /* ---------------- DOTS ---------------- */
-                .dots { display:flex; gap:12px; }
-                .dot {
-                    width:12px;
-                    height:12px;
-                    border-radius:50%;
-                    background:rgba(8,42,123,0.2);
-                    cursor:pointer;
-                }
-                .dot.active { background:rgb(8,42,123); transform:scale(1.2); }
-
-                /* ---------------- PROJECT BUTTONS ---------------- */
-                .projects {
-                    margin-top:40px;
-                    display:grid;
-                    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-                    gap:20px;
-                    width:100%;
-                    max-width:1000px;
-                }
-                .projects .card {
-                    position:relative;
-                    width:100%;
-                    height:80px;
-                    text-align:center;
-                    display:flex;
-                    justify-content:center;
-                    align-items:center;
-                    background:rgba(0,15,25,0.65);
-                    color:cyan;
-                    border:2px solid cyan;
-                    border-radius:14px;
-                }
-                .projects .card:hover {
-                    background:cyan;
-                    color:black;
-                    transform:translateY(-8px) scale(1.05);
-                }
+                  @keyframes floatUp {
+                      from { transform: translateY(100vh); opacity: 0; }
+                      to   { transform: translateY(-20vh); opacity: 1; }
+                  }
               </style>
           </head>
 
           <body>
 
-              <!-- FLOAT BUTTON -->
-              <a href="https://gopichakradhar.me" id="super-btn">
-                  <img src="https://ik.imagekit.io/gopichakradhar/assets/super.jpg">
-              </a>
-
-              <!-- CAROUSEL -->
-              <div class="main-container">
-                  <div class="carousel-section">
-                      <div class="carousel-container">
-                          <button class="nav-arrow up"><img src="assets/top.png"></button>
-
-                          <div class="carousel-track">
-                              <div class="card" data-index="0"><img src="https://ik.imagekit.io/gopichakradhar/luffy/o1.jpeg"></div>
-                              <div class="card" data-index="1"><img src="https://ik.imagekit.io/gopichakradhar/luffy/o2.jpeg"></div>
-                              <div class="card" data-index="2"><img src="https://ik.imagekit.io/gopichakradhar/luffy/o4.jpeg"></div>
-                              <div class="card" data-index="3"><img src="https://ik.imagekit.io/gopichakradhar/luffy/o3.jpeg"></div>
-                              <div class="card" data-index="4"><img src="https://ik.imagekit.io/gopichakradhar/luffy/o5.jpeg"></div>
-                              <div class="card" data-index="5"><img src="https://ik.imagekit.io/gopichakradhar/luffy/o6.jpeg"></div>
-                          </div>
-
-                          <button class="nav-arrow down"><img src="assets/down.png"></button>
-                      </div>
-                  </div>
-
-                  <div class="controls-section">
-                      <div class="member-info">
-                          <h2 class="member-name">Luffy</h2>
-                          <p class="member-role">Founder</p>
-                      </div>
-
-                      <div class="dots">
-                          <div class="dot active" data-index="0"></div>
-                          <div class="dot" data-index="1"></div>
-                          <div class="dot" data-index="2"></div>
-                          <div class="dot" data-index="3"></div>
-                          <div class="dot" data-index="4"></div>
-                          <div class="dot" data-index="5"></div>
-                      </div>
-                  </div>
-              </div>
-
-              <!-- PROJECT LINKS -->
-              <div class="projects">
-                  <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver1/">WebWeaver 1</a>
-                  <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver2/">WebWeaver 2</a>
-                  <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver3/">WebWeaver 3</a>
-                  <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver4/">WebWeaver 4</a>
-                  <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver5/">WebWeaver 5</a>
-                  <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver6/">WebWeaver 6</a>
-                  <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver7/">WebWeaver 7</a>
-                  <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver8/">WebWeaver 8</a>
-              </div>
+              <h1>🚀 Pixel-by-Pixel • 3D Project Hub</h1>
 
               <script>
-                /* ---------------- JS YOU PROVIDED, CLEAN + INLINE ---------------- */
-
-                const teamMembers = [
-                    { name:"Luffy", role:"Founder" },
-                    { name:"Monkey D. Luffy", role:"Creative Director" },
-                    { name:"Luffy chan", role:"Lead Developer" },
-                    { name:"Lucy", role:"UX Designer" },
-                    { name:"Luffy kun", role:"Marketing Manager" },
-                    { name:"Monkey chan", role:"Product Manager" }
-                ];
-
-                const cards = document.querySelectorAll(".carousel-track .card");
-                const dots = document.querySelectorAll(".dot");
-                const memberName = document.querySelector(".member-name");
-                const memberRole = document.querySelector(".member-role");
-
-                let currentIndex = 0;
-                let isAnimating = false;
-
-                function updateCarousel(newIndex){
-                    if(isAnimating) return;
-                    isAnimating = true;
-
-                    currentIndex = (newIndex + cards.length) % cards.length;
-
-                    cards.forEach((card,i)=>{
-                        const offset = (i - currentIndex + cards.length) % cards.length;
-                        card.classList.remove("center","up-1","up-2","down-1","down-2","hidden");
-
-                        if(offset === 0) card.classList.add("center");
-                        else if(offset === 1) card.classList.add("down-1");
-                        else if(offset === 2) card.classList.add("down-2");
-                        else if(offset === cards.length - 1) card.classList.add("up-1");
-                        else if(offset === cards.length - 2) card.classList.add("up-2");
-                        else card.classList.add("hidden");
-                    });
-
-                    dots.forEach((dot,i)=>dot.classList.toggle("active", i===currentIndex));
-
-                    memberName.style.opacity = "0";
-                    memberRole.style.opacity = "0";
-
-                    setTimeout(()=>{
-                        memberName.textContent = teamMembers[currentIndex].name;
-                        memberRole.textContent = teamMembers[currentIndex].role;
-                        memberName.style.opacity = "1";
-                        memberRole.style.opacity = "1";
-                    },300);
-
-                    setTimeout(()=>{ isAnimating=false; },800);
-                }
-
-                document.addEventListener("keydown",e=>{
-                    if(e.key==="ArrowUp") updateCarousel(currentIndex-1);
-                    if(e.key==="ArrowDown") updateCarousel(currentIndex+1);
-                });
-
-                dots.forEach((dot,i)=>dot.addEventListener("click",()=>updateCarousel(i)));
-
-                cards.forEach((card,i)=>card.addEventListener("click",()=>updateCarousel(i)));
-
-                updateCarousel(0);
+                  /* Create floating particles */
+                  for (let i = 0; i < 35; i++) {
+                      const p = document.createElement("div");
+                      p.classList.add("particle");
+                      p.style.left = Math.random() * 100 + "%";
+                      p.style.animationDuration = 5 + Math.random() * 10 + "s";
+                      p.style.animationDelay = Math.random() * 5 + "s";
+                      document.body.appendChild(p);
+                  }
               </script>
+
+              <div class="grid">
+                 <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver1/">WebWeaver 1</a>
+                 <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver2/">WebWeaver 2</a>
+                 <a class="card" href="httpsashank07-debug.github.io/pixel-by-pixel/WebWeaver3/">WebWeaver 3</a>
+                 <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver4/">WebWeaver 4</a>
+                 <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver5/">WebWeaver 5</a>
+                 <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver6/">WebWeaver 6</a>
+                 <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver7/">WebWeaver 7</a>
+                 <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver8/">WebWeaver 8</a>
+
+              </div>
 
           </body>
           </html>
@@ -316,7 +167,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './public'
+          path: "./public"
 
       - name: Deploy to GitHub Pages
         id: deployment
