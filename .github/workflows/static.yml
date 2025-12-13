@@ -28,8 +28,6 @@ jobs:
       - name: Prepare publish folder
         run: |
           mkdir public
-
-          # Copy all WebWeaver projects
           cp -r WebDev-v3/WebWeaver1 public/WebWeaver1
           cp -r WebDev-v3/WebWeaver2 public/WebWeaver2
           cp -r WebDev-v3/WebWeaver3 public/WebWeaver3
@@ -39,358 +37,120 @@ jobs:
           cp -r WebDev-v3/WebWeaver7 public/WebWeaver7
           cp -r WebDev-v3/WebWeaver8 public/WebWeaver8
 
-          # ---------------------------------------
-          # PREMIUM 3D ANIMATED PROJECT HUB
-          # ---------------------------------------
-          cat << 'EOF' > public/index.html
+      - name: Create homepage
+        run: |
+          cat > public/index.html << 'ENDHTML'
           <!DOCTYPE html>
           <html lang="en">
           <head>
-              <meta charset="UTF-8" />
-              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-              <title>WebWeaver Projects - 3D Hub</title>
-              <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
-              
-              <style>
-                  * {
-                      margin: 0;
-                      padding: 0;
-                      box-sizing: border-box;
-                  }
-
-                  body {
-                      min-height: 100vh;
-                      background: linear-gradient(135deg, #0a0a0f 0%, #1a0b2e 50%, #16213e 100%);
-                      font-family: 'Orbitron', sans-serif;
-                      overflow-x: hidden;
-                      position: relative;
-                  }
-
-                  /* Animated background particles */
-                  .particle {
-                      position: fixed;
-                      border-radius: 50%;
-                      pointer-events: none;
-                  }
-
-                  .particle-1 {
-                      width: 3px;
-                      height: 3px;
-                      background: rgba(0, 234, 255, 0.6);
-                      animation: float1 15s infinite ease-in-out;
-                  }
-
-                  .particle-2 {
-                      width: 5px;
-                      height: 5px;
-                      background: rgba(138, 43, 226, 0.5);
-                      animation: float2 12s infinite ease-in-out;
-                  }
-
-                  .particle-3 {
-                      width: 4px;
-                      height: 4px;
-                      background: rgba(255, 20, 147, 0.4);
-                      animation: float3 18s infinite ease-in-out;
-                  }
-
-                  @keyframes float1 {
-                      0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
-                      10% { opacity: 1; }
-                      90% { opacity: 1; }
-                      100% { transform: translate(100vw, -100vh) rotate(360deg); opacity: 0; }
-                  }
-
-                  @keyframes float2 {
-                      0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
-                      10% { opacity: 1; }
-                      90% { opacity: 1; }
-                      100% { transform: translate(-100vw, -100vh) rotate(-360deg); opacity: 0; }
-                  }
-
-                  @keyframes float3 {
-                      0%, 100% { transform: translate(0, 0) scale(1); opacity: 0; }
-                      10% { opacity: 1; }
-                      90% { opacity: 1; }
-                      100% { transform: translate(50vw, -120vh) scale(1.5); opacity: 0; }
-                  }
-
-                  /* Header section */
-                  .header {
-                      text-align: center;
-                      padding: 60px 20px 40px;
-                      position: relative;
-                      z-index: 10;
-                  }
-
-                  .header h1 {
-                      font-size: clamp(36px, 6vw, 64px);
-                      font-weight: 900;
-                      background: linear-gradient(135deg, #00eaff, #8a2be2, #ff1493);
-                      -webkit-background-clip: text;
-                      -webkit-text-fill-color: transparent;
-                      background-clip: text;
-                      margin-bottom: 15px;
-                      animation: glowPulse 3s infinite ease-in-out;
-                      text-shadow: 0 0 40px rgba(0, 234, 255, 0.5);
-                  }
-
-                  .header p {
-                      font-size: clamp(14px, 2vw, 18px);
-                      color: rgba(255, 255, 255, 0.7);
-                      letter-spacing: 2px;
-                  }
-
-                  @keyframes glowPulse {
-                      0%, 100% { filter: drop-shadow(0 0 20px rgba(0, 234, 255, 0.6)); }
-                      50% { filter: drop-shadow(0 0 40px rgba(138, 43, 226, 0.8)); }
-                  }
-
-                  /* Project grid */
-                  .grid-container {
-                      max-width: 1400px;
-                      margin: 0 auto;
-                      padding: 40px 30px 80px;
-                      perspective: 1500px;
-                      position: relative;
-                      z-index: 10;
-                  }
-
-                  .grid {
-                      display: grid;
-                      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-                      gap: 40px;
-                  }
-
-                  /* 3D Project Card */
-                  .card {
-                      position: relative;
-                      height: 220px;
-                      border-radius: 20px;
-                      background: linear-gradient(135deg, rgba(10, 10, 30, 0.9), rgba(30, 30, 60, 0.7));
-                      border: 2px solid transparent;
-                      background-clip: padding-box;
-                      text-decoration: none;
-                      color: #fff;
-                      display: flex;
-                      flex-direction: column;
-                      justify-content: center;
-                      align-items: center;
-                      overflow: hidden;
-                      transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-                      transform-style: preserve-3d;
-                      cursor: pointer;
-                  }
-
-                  .card::before {
-                      content: '';
-                      position: absolute;
-                      inset: 0;
-                      border-radius: 20px;
-                      padding: 2px;
-                      background: linear-gradient(135deg, #00eaff, #8a2be2, #ff1493);
-                      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-                      -webkit-mask-composite: xor;
-                      mask-composite: exclude;
-                      opacity: 0.6;
-                      transition: opacity 0.5s;
-                  }
-
-                  .card::after {
-                      content: '';
-                      position: absolute;
-                      top: -50%;
-                      left: -50%;
-                      width: 200%;
-                      height: 200%;
-                      background: radial-gradient(circle, rgba(0, 234, 255, 0.1) 0%, transparent 70%);
-                      opacity: 0;
-                      transition: opacity 0.5s;
-                  }
-
-                  .card:hover {
-                      transform: translateY(-15px) rotateX(10deg) rotateY(5deg) scale(1.05);
-                      box-shadow: 
-                          0 25px 50px rgba(0, 234, 255, 0.3),
-                          0 15px 30px rgba(138, 43, 226, 0.2),
-                          inset 0 0 30px rgba(0, 234, 255, 0.1);
-                  }
-
-                  .card:hover::before {
-                      opacity: 1;
-                  }
-
-                  .card:hover::after {
-                      opacity: 1;
-                      animation: rotate 4s linear infinite;
-                  }
-
-                  @keyframes rotate {
-                      from { transform: rotate(0deg); }
-                      to { transform: rotate(360deg); }
-                  }
-
-                  .card-number {
-                      font-size: 72px;
-                      font-weight: 900;
-                      background: linear-gradient(135deg, #00eaff, #8a2be2);
-                      -webkit-background-clip: text;
-                      -webkit-text-fill-color: transparent;
-                      background-clip: text;
-                      margin-bottom: 10px;
-                      transition: transform 0.5s;
-                      transform: translateZ(30px);
-                  }
-
-                  .card:hover .card-number {
-                      transform: translateZ(50px) scale(1.1);
-                  }
-
-                  .card-title {
-                      font-size: 24px;
-                      font-weight: 700;
-                      letter-spacing: 3px;
-                      text-transform: uppercase;
-                      color: rgba(255, 255, 255, 0.9);
-                      transition: all 0.5s;
-                      transform: translateZ(20px);
-                  }
-
-                  .card:hover .card-title {
-                      color: #00eaff;
-                      transform: translateZ(40px);
-                      text-shadow: 0 0 20px rgba(0, 234, 255, 0.8);
-                  }
-
-                  .card-subtitle {
-                      font-size: 12px;
-                      color: rgba(255, 255, 255, 0.5);
-                      letter-spacing: 2px;
-                      margin-top: 8px;
-                      transition: all 0.5s;
-                      transform: translateZ(10px);
-                  }
-
-                  .card:hover .card-subtitle {
-                      color: rgba(255, 255, 255, 0.8);
-                      transform: translateZ(30px);
-                  }
-
-                  /* Responsive */
-                  @media (max-width: 768px) {
-                      .grid {
-                          grid-template-columns: 1fr;
-                          gap: 30px;
-                      }
-
-                      .card {
-                          height: 200px;
-                      }
-
-                      .header {
-                          padding: 40px 20px 30px;
-                      }
-                  }
-
-                  /* Loading animation */
-                  @keyframes fadeInUp {
-                      from {
-                          opacity: 0;
-                          transform: translateY(30px);
-                      }
-                      to {
-                          opacity: 1;
-                          transform: translateY(0);
-                      }
-                  }
-
-                  .card {
-                      animation: fadeInUp 0.6s ease-out backwards;
-                  }
-
-                  .card:nth-child(1) { animation-delay: 0.1s; }
-                  .card:nth-child(2) { animation-delay: 0.2s; }
-                  .card:nth-child(3) { animation-delay: 0.3s; }
-                  .card:nth-child(4) { animation-delay: 0.4s; }
-                  .card:nth-child(5) { animation-delay: 0.5s; }
-                  .card:nth-child(6) { animation-delay: 0.6s; }
-                  .card:nth-child(7) { animation-delay: 0.7s; }
-                  .card:nth-child(8) { animation-delay: 0.8s; }
-              </style>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>WebWeaver Projects</title>
+            <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+            <style>
+              *{margin:0;padding:0;box-sizing:border-box}
+              body{min-height:100vh;background:linear-gradient(135deg,#0a0a0f 0%,#1a0b2e 50%,#16213e 100%);font-family:'Orbitron',sans-serif;overflow-x:hidden;position:relative}
+              .particle{position:fixed;border-radius:50%;pointer-events:none}
+              .particle-1{width:3px;height:3px;background:rgba(0,234,255,.6);animation:float1 15s infinite ease-in-out}
+              .particle-2{width:5px;height:5px;background:rgba(138,43,226,.5);animation:float2 12s infinite ease-in-out}
+              .particle-3{width:4px;height:4px;background:rgba(255,20,147,.4);animation:float3 18s infinite ease-in-out}
+              @keyframes float1{0%,100%{transform:translate(0,0) rotate(0);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translate(100vw,-100vh) rotate(360deg);opacity:0}}
+              @keyframes float2{0%,100%{transform:translate(0,0) rotate(0);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translate(-100vw,-100vh) rotate(-360deg);opacity:0}}
+              @keyframes float3{0%,100%{transform:translate(0,0) scale(1);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translate(50vw,-120vh) scale(1.5);opacity:0}}
+              .header{text-align:center;padding:60px 20px 40px;position:relative;z-index:10}
+              .header h1{font-size:clamp(36px,6vw,64px);font-weight:900;background:linear-gradient(135deg,#00eaff,#8a2be2,#ff1493);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:15px;animation:glowPulse 3s infinite ease-in-out}
+              .header p{font-size:clamp(14px,2vw,18px);color:rgba(255,255,255,.7);letter-spacing:2px}
+              @keyframes glowPulse{0%,100%{filter:drop-shadow(0 0 20px rgba(0,234,255,.6))}50%{filter:drop-shadow(0 0 40px rgba(138,43,226,.8))}}
+              .grid-container{max-width:1400px;margin:0 auto;padding:40px 30px 80px;perspective:1500px;position:relative;z-index:10}
+              .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:40px}
+              .card{position:relative;height:220px;border-radius:20px;background:linear-gradient(135deg,rgba(10,10,30,.9),rgba(30,30,60,.7));border:2px solid transparent;background-clip:padding-box;text-decoration:none;color:#fff;display:flex;flex-direction:column;justify-content:center;align-items:center;overflow:hidden;transition:all .5s cubic-bezier(.23,1,.32,1);transform-style:preserve-3d;cursor:pointer}
+              .card::before{content:'';position:absolute;inset:0;border-radius:20px;padding:2px;background:linear-gradient(135deg,#00eaff,#8a2be2,#ff1493);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.6;transition:opacity .5s}
+              .card::after{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(0,234,255,.1) 0%,transparent 70%);opacity:0;transition:opacity .5s}
+              .card:hover{transform:translateY(-15px) rotateX(10deg) rotateY(5deg) scale(1.05);box-shadow:0 25px 50px rgba(0,234,255,.3),0 15px 30px rgba(138,43,226,.2),inset 0 0 30px rgba(0,234,255,.1)}
+              .card:hover::before{opacity:1}
+              .card:hover::after{opacity:1;animation:rotate 4s linear infinite}
+              @keyframes rotate{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+              .card-number{font-size:72px;font-weight:900;background:linear-gradient(135deg,#00eaff,#8a2be2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px;transition:transform .5s;transform:translateZ(30px)}
+              .card:hover .card-number{transform:translateZ(50px) scale(1.1)}
+              .card-title{font-size:24px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.9);transition:all .5s;transform:translateZ(20px)}
+              .card:hover .card-title{color:#00eaff;transform:translateZ(40px);text-shadow:0 0 20px rgba(0,234,255,.8)}
+              .card-subtitle{font-size:12px;color:rgba(255,255,255,.5);letter-spacing:2px;margin-top:8px;transition:all .5s;transform:translateZ(10px)}
+              .card:hover .card-subtitle{color:rgba(255,255,255,.8);transform:translateZ(30px)}
+              @media(max-width:768px){.grid{grid-template-columns:1fr;gap:30px}.card{height:200px}.header{padding:40px 20px 30px}}
+              @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+              .card{animation:fadeInUp .6s ease-out backwards}
+              .card:nth-child(1){animation-delay:.1s}
+              .card:nth-child(2){animation-delay:.2s}
+              .card:nth-child(3){animation-delay:.3s}
+              .card:nth-child(4){animation-delay:.4s}
+              .card:nth-child(5){animation-delay:.5s}
+              .card:nth-child(6){animation-delay:.6s}
+              .card:nth-child(7){animation-delay:.7s}
+              .card:nth-child(8){animation-delay:.8s}
+            </style>
           </head>
-
           <body>
-              <!-- Animated particles -->
-              <script>
-                  for (let i = 0; i < 30; i++) {
-                      const particle = document.createElement('div');
-                      particle.classList.add('particle', `particle-${(i % 3) + 1}`);
-                      particle.style.left = Math.random() * 100 + 'vw';
-                      particle.style.top = Math.random() * 100 + 'vh';
-                      particle.style.animationDelay = Math.random() * 5 + 's';
-                      document.body.appendChild(particle);
-                  }
-              </script>
-
-              <div class="header">
-                  <h1>🚀  WebWeaver | Frontend Practice Projects</h1>
-                  <p>PIXEL • BY • PIXEL</p>
+            <script>
+              for(let i=0;i<30;i++){
+                const p=document.createElement('div');
+                p.classList.add('particle','particle-'+((i%3)+1));
+                p.style.left=Math.random()*100+'vw';
+                p.style.top=Math.random()*100+'vh';
+                p.style.animationDelay=Math.random()*5+'s';
+                document.body.appendChild(p);
+              }
+            </script>
+            <div class="header">
+              <h1>🚀 WebWeaver | Frontend Practice Projects</h1>
+              <p>PIXEL • BY • PIXEL</p>
+            </div>
+            <div class="grid-container">
+              <div class="grid">
+                <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver1/">
+                  <div class="card-number">01</div>
+                  <div class="card-title">WebWeaver</div>
+                  <div class="card-subtitle">PROJECT ONE</div>
+                </a>
+                <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver2/">
+                  <div class="card-number">02</div>
+                  <div class="card-title">WebWeaver</div>
+                  <div class="card-subtitle">PROJECT TWO</div>
+                </a>
+                <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver3/">
+                  <div class="card-number">03</div>
+                  <div class="card-title">WebWeaver</div>
+                  <div class="card-subtitle">PROJECT THREE</div>
+                </a>
+                <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver4/">
+                  <div class="card-number">04</div>
+                  <div class="card-title">WebWeaver</div>
+                  <div class="card-subtitle">PROJECT FOUR</div>
+                </a>
+                <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver5/">
+                  <div class="card-number">05</div>
+                  <div class="card-title">WebWeaver</div>
+                  <div class="card-subtitle">PROJECT FIVE</div>
+                </a>
+                <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver6/">
+                  <div class="card-number">06</div>
+                  <div class="card-title">WebWeaver</div>
+                  <div class="card-subtitle">PROJECT SIX</div>
+                </a>
+                <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver7/">
+                  <div class="card-number">07</div>
+                  <div class="card-title">WebWeaver</div>
+                  <div class="card-subtitle">PROJECT SEVEN</div>
+                </a>
+                <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver8/">
+                  <div class="card-number">08</div>
+                  <div class="card-title">WebWeaver</div>
+                  <div class="card-subtitle">PROJECT EIGHT</div>
+                </a>
               </div>
-
-              <div class="grid-container">
-                  <div class="grid">
-                      <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver1/">
-                          <div class="card-number">01</div>
-                          <div class="card-title">WebWeaver</div>
-                          <div class="card-subtitle">PROJECT ONE</div>
-                      </a>
-
-                      <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver2/">
-                          <div class="card-number">02</div>
-                          <div class="card-title">WebWeaver</div>
-                          <div class="card-subtitle">PROJECT TWO</div>
-                      </a>
-
-                      <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver3/">
-                          <div class="card-number">03</div>
-                          <div class="card-title">WebWeaver</div>
-                          <div class="card-subtitle">PROJECT THREE</div>
-                      </a>
-
-                      <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver4/">
-                          <div class="card-number">04</div>
-                          <div class="card-title">WebWeaver</div>
-                          <div class="card-subtitle">PROJECT FOUR</div>
-                      </a>
-
-                      <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver5/">
-                          <div class="card-number">05</div>
-                          <div class="card-title">WebWeaver</div>
-                          <div class="card-subtitle">PROJECT FIVE</div>
-                      </a>
-
-                      <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver6/">
-                          <div class="card-number">06</div>
-                          <div class="card-title">WebWeaver</div>
-                          <div class="card-subtitle">PROJECT SIX</div>
-                      </a>
-
-                      <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver7/">
-                          <div class="card-number">07</div>
-                          <div class="card-title">WebWeaver</div>
-                          <div class="card-subtitle">PROJECT SEVEN</div>
-                      </a>
-
-                      <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver8/">
-                          <div class="card-number">08</div>
-                          <div class="card-title">WebWeaver</div>
-                          <div class="card-subtitle">PROJECT EIGHT</div>
-                      </a>
-                  </div>
-              </div>
+            </div>
           </body>
           </html>
-          EOF
+          ENDHTML
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
