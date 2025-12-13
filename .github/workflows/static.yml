@@ -1,4 +1,4 @@
-name: Deploy WebWeaver Projects (Futuristic Edition)
+name: Deploy WebWeaver Projects (Team Carousel Edition)
 
 on:
   push:
@@ -29,10 +29,19 @@ jobs:
         run: |
           mkdir public
 
+          # Copy all WebWeaver projects
+          cp -r WebDev-v3/WebWeaver1 public/WebWeaver1
           cp -r WebDev-v3/WebWeaver2 public/WebWeaver2
           cp -r WebDev-v3/WebWeaver3 public/WebWeaver3
+          cp -r WebDev-v3/WebWeaver4 public/WebWeaver4
+          cp -r WebDev-v3/WebWeaver5 public/WebWeaver5
+          cp -r WebDev-v3/WebWeaver6 public/WebWeaver6
+          cp -r WebDev-v3/WebWeaver7 public/WebWeaver7
+          cp -r WebDev-v3/WebWeaver8 public/WebWeaver8
 
-          # FUTURISTIC HOMEPAGE
+          # ============================================
+          # CREATE FULL INLINE HTML (YOUR CODE + CSS + JS)
+          # ============================================
           cat << 'EOF' > public/index.html
           <!DOCTYPE html>
           <html lang="en">
@@ -41,106 +50,261 @@ jobs:
               <meta name="viewport" content="width=device-width, initial-scale=1.0">
               <title>Pixel-by-Pixel Projects</title>
 
-              <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
-
               <style>
-                  body {
-                      margin: 0;
-                      background: radial-gradient(circle at center, #00111a, #000000 70%);
-                      font-family: 'Orbitron', sans-serif;
-                      color: #00f6ff;
-                      overflow: hidden;
-                  }
+                /* ---------------- GLOBAL + FLOAT BUTTON ---------------- */
+                * { margin:0; padding:0; box-sizing:border-box; }
 
-                  /* Glowing animated rings */
-                  .ring {
-                      position: absolute;
-                      border: 2px solid cyan;
-                      width: 200px;
-                      height: 200px;
-                      border-radius: 50%;
-                      left: 50%;
-                      top: 50%;
-                      transform: translate(-50%, -50%);
-                      animation: rotate 10s linear infinite;
-                      opacity: 0.2;
-                  }
-                  .ring:nth-child(2) { width: 260px; height: 260px; animation-duration: 14s; }
-                  .ring:nth-child(3) { width: 320px; height: 320px; animation-duration: 18s; }
+                #super-btn {
+                    position: fixed;
+                    right: 32px;
+                    bottom: 32px;
+                    z-index: 1000;
+                    display: inline-block;
+                    border-radius: 18px;
+                    overflow: hidden;
+                    box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+                    width: 56px;
+                    height: 56px;
+                    background: #fff;
+                    transition: 0.2s;
+                }
+                #super-btn:hover { transform:scale(1.07); box-shadow:0 4px 24px rgba(0,0,0,0.3); }
+                #super-btn img { width:100%; height:100%; object-fit:cover; border-radius:16px; }
 
-                  @keyframes rotate {
-                      from { transform: translate(-50%, -50%) rotate(0deg); }
-                      to { transform: translate(-50%, -50%) rotate(360deg); }
-                  }
+                body {
+                    background:#f5f5f5;
+                    min-height:100vh;
+                    display:flex;
+                    flex-direction:column;
+                    justify-content:center;
+                    align-items:center;
+                    overflow:hidden;
+                    padding:20px 0;
+                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                }
 
-                  /* Center content */
-                  .content {
-                      position: relative;
-                      z-index: 2;
-                      text-align: center;
-                      margin-top: 15vh;
-                  }
+                /* ---------------- MAIN LAYOUT ---------------- */
+                .main-container {
+                    display:flex;
+                    width:100%;
+                    max-width:1200px;
+                    height:80vh;
+                    gap:60px;
+                    align-items:center;
+                    justify-content:center;
+                }
 
-                  h1 {
-                      font-size: 46px;
-                      text-shadow: 0 0 15px #00eaff, 0 0 30px #00f6ff;
-                      margin-bottom: 50px;
-                  }
+                .carousel-section { flex:1; display:flex; justify-content:center; }
+                .controls-section { flex:1; display:flex; flex-direction:column; align-items:center; gap:40px; }
 
-                  .projects {
-                      display: flex;
-                      flex-direction: column;
-                      gap: 25px;
-                      max-width: 600px;
-                      margin: auto;
-                  }
+                /* ---------------- CAROUSEL ---------------- */
+                .carousel-container {
+                    width:100%;
+                    max-width:500px;
+                    height:70vh;
+                    position:relative;
+                    perspective:1000px;
+                    display:flex;
+                    flex-direction:column;
+                    align-items:center;
+                }
 
-                  .card {
-    padding: 20px;
-    font-size: 24px;
-    border: 2px solid #00f6ff;
-    border-radius: 10px;
-    background: rgba(0, 40, 60, 0.7);
-    text-decoration: none;
-    color: cyan;
-    box-shadow: 0 0 20px #00eaff;
-    transition: 0.35s ease;
-    opacity: 1 !important;
-}
+                .carousel-container .nav-arrow { display:none; }
 
+                .carousel-track {
+                    width:450px;
+                    height:100%;
+                    position:relative;
+                    transform-style:preserve-3d;
+                    transition:transform 0.8s cubic-bezier(.25,.46,.45,.94);
+                }
 
-                  .card:hover {
-                      background: cyan;
-                      color: black;
-                      transform: translateY(-8px) scale(1.05);
-                      box-shadow: 0 0 25px cyan;
-                  }
+                .card {
+                    position:absolute;
+                    width:400px;
+                    height:225px;
+                    background:white;
+                    border-radius:20px;
+                    overflow:hidden;
+                    box-shadow:0 20px 40px rgba(0,0,0,0.15);
+                    transition:0.8s cubic-bezier(.25,.46,.45,.94);
+                    cursor:pointer;
+                }
+
+                .card img { width:100%; height:100%; object-fit:cover; }
+
+                .card.center { z-index:10; transform:scale(1.1); }
+                .card.up-1 { transform:translateY(-150px) scale(0.9) translateZ(-100px); opacity:0.9; }
+                .card.up-2 { transform:translateY(-300px) scale(0.8) translateZ(-300px); opacity:0.7; }
+                .card.down-1 { transform:translateY(150px) scale(0.9) translateZ(-100px); opacity:0.9; }
+                .card.down-2 { transform:translateY(300px) scale(0.8) translateZ(-300px); opacity:0.7; }
+                .card.hidden { opacity:0; pointer-events:none; }
+
+                /* ---------------- MEMBER INFO ---------------- */
+                .member-info { text-align:center; transition:0.5s; }
+                .member-name { font-size:2rem; font-weight:700; color:rgb(8,42,123); }
+                .member-role { font-size:1.2rem; opacity:0.7; }
+
+                /* ---------------- DOTS ---------------- */
+                .dots { display:flex; gap:12px; }
+                .dot {
+                    width:12px;
+                    height:12px;
+                    border-radius:50%;
+                    background:rgba(8,42,123,0.2);
+                    cursor:pointer;
+                }
+                .dot.active { background:rgb(8,42,123); transform:scale(1.2); }
+
+                /* ---------------- PROJECT BUTTONS ---------------- */
+                .projects {
+                    margin-top:40px;
+                    display:grid;
+                    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+                    gap:20px;
+                    width:100%;
+                    max-width:1000px;
+                }
+                .projects .card {
+                    position:relative;
+                    width:100%;
+                    height:80px;
+                    text-align:center;
+                    display:flex;
+                    justify-content:center;
+                    align-items:center;
+                    background:rgba(0,15,25,0.65);
+                    color:cyan;
+                    border:2px solid cyan;
+                    border-radius:14px;
+                }
+                .projects .card:hover {
+                    background:cyan;
+                    color:black;
+                    transform:translateY(-8px) scale(1.05);
+                }
               </style>
           </head>
 
           <body>
 
-              <div class="ring"></div>
-              <div class="ring"></div>
-              <div class="ring"></div>
+              <!-- FLOAT BUTTON -->
+              <a href="https://gopichakradhar.me" id="super-btn">
+                  <img src="https://ik.imagekit.io/gopichakradhar/assets/super.jpg">
+              </a>
 
-              <div class="content">
-                  <h1 id="title">🚀 Pixel-by-Pixel Projects</h1>
+              <!-- CAROUSEL -->
+              <div class="main-container">
+                  <div class="carousel-section">
+                      <div class="carousel-container">
+                          <button class="nav-arrow up"><img src="assets/top.png"></button>
 
-                  <div class="projects">
-                      <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver2/">WebWeaver 2</a>
-                      <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver3/">WebWeaver 3</a>
+                          <div class="carousel-track">
+                              <div class="card" data-index="0"><img src="https://ik.imagekit.io/gopichakradhar/luffy/o1.jpeg"></div>
+                              <div class="card" data-index="1"><img src="https://ik.imagekit.io/gopichakradhar/luffy/o2.jpeg"></div>
+                              <div class="card" data-index="2"><img src="https://ik.imagekit.io/gopichakradhar/luffy/o4.jpeg"></div>
+                              <div class="card" data-index="3"><img src="https://ik.imagekit.io/gopichakradhar/luffy/o3.jpeg"></div>
+                              <div class="card" data-index="4"><img src="https://ik.imagekit.io/gopichakradhar/luffy/o5.jpeg"></div>
+                              <div class="card" data-index="5"><img src="https://ik.imagekit.io/gopichakradhar/luffy/o6.jpeg"></div>
+                          </div>
+
+                          <button class="nav-arrow down"><img src="assets/down.png"></button>
+                      </div>
+                  </div>
+
+                  <div class="controls-section">
+                      <div class="member-info">
+                          <h2 class="member-name">Luffy</h2>
+                          <p class="member-role">Founder</p>
+                      </div>
+
+                      <div class="dots">
+                          <div class="dot active" data-index="0"></div>
+                          <div class="dot" data-index="1"></div>
+                          <div class="dot" data-index="2"></div>
+                          <div class="dot" data-index="3"></div>
+                          <div class="dot" data-index="4"></div>
+                          <div class="dot" data-index="5"></div>
+                      </div>
                   </div>
               </div>
 
-              <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+              <!-- PROJECT LINKS -->
+              <div class="projects">
+                  <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver1/">WebWeaver 1</a>
+                  <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver2/">WebWeaver 2</a>
+                  <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver3/">WebWeaver 3</a>
+                  <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver4/">WebWeaver 4</a>
+                  <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver5/">WebWeaver 5</a>
+                  <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver6/">WebWeaver 6</a>
+                  <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver7/">WebWeaver 7</a>
+                  <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver8/">WebWeaver 8</a>
+              </div>
 
-           <script>
-    gsap.from("#title", { opacity: 0, y: -40, duration: 1.2, ease: "power3.out" });
-    gsap.from(".card", { opacity: 0, y: 40, duration: 1, stagger: 0.25, ease: "power3.out" });
-    gsap.to(".card", { opacity: 1, duration: 0.1 });
-</script>
+              <script>
+                /* ---------------- JS YOU PROVIDED, CLEAN + INLINE ---------------- */
 
+                const teamMembers = [
+                    { name:"Luffy", role:"Founder" },
+                    { name:"Monkey D. Luffy", role:"Creative Director" },
+                    { name:"Luffy chan", role:"Lead Developer" },
+                    { name:"Lucy", role:"UX Designer" },
+                    { name:"Luffy kun", role:"Marketing Manager" },
+                    { name:"Monkey chan", role:"Product Manager" }
+                ];
+
+                const cards = document.querySelectorAll(".carousel-track .card");
+                const dots = document.querySelectorAll(".dot");
+                const memberName = document.querySelector(".member-name");
+                const memberRole = document.querySelector(".member-role");
+
+                let currentIndex = 0;
+                let isAnimating = false;
+
+                function updateCarousel(newIndex){
+                    if(isAnimating) return;
+                    isAnimating = true;
+
+                    currentIndex = (newIndex + cards.length) % cards.length;
+
+                    cards.forEach((card,i)=>{
+                        const offset = (i - currentIndex + cards.length) % cards.length;
+                        card.classList.remove("center","up-1","up-2","down-1","down-2","hidden");
+
+                        if(offset === 0) card.classList.add("center");
+                        else if(offset === 1) card.classList.add("down-1");
+                        else if(offset === 2) card.classList.add("down-2");
+                        else if(offset === cards.length - 1) card.classList.add("up-1");
+                        else if(offset === cards.length - 2) card.classList.add("up-2");
+                        else card.classList.add("hidden");
+                    });
+
+                    dots.forEach((dot,i)=>dot.classList.toggle("active", i===currentIndex));
+
+                    memberName.style.opacity = "0";
+                    memberRole.style.opacity = "0";
+
+                    setTimeout(()=>{
+                        memberName.textContent = teamMembers[currentIndex].name;
+                        memberRole.textContent = teamMembers[currentIndex].role;
+                        memberName.style.opacity = "1";
+                        memberRole.style.opacity = "1";
+                    },300);
+
+                    setTimeout(()=>{ isAnimating=false; },800);
+                }
+
+                document.addEventListener("keydown",e=>{
+                    if(e.key==="ArrowUp") updateCarousel(currentIndex-1);
+                    if(e.key==="ArrowDown") updateCarousel(currentIndex+1);
+                });
+
+                dots.forEach((dot,i)=>dot.addEventListener("click",()=>updateCarousel(i)));
+
+                cards.forEach((card,i)=>card.addEventListener("click",()=>updateCarousel(i)));
+
+                updateCarousel(0);
+              </script>
 
           </body>
           </html>
