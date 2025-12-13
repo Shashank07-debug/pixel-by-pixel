@@ -1,4 +1,4 @@
-name: Deploy WebWeaver Projects with Futuristic Homepage
+name: Deploy WebWeaver Projects (Futuristic Edition)
 
 on:
   push:
@@ -25,124 +25,122 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Prepare publish folder and copy projects
       - name: Prepare publish folder
         run: |
           mkdir public
+
           cp -r WebDev-v3/WebWeaver2 public/WebWeaver2
           cp -r WebDev-v3/WebWeaver3 public/WebWeaver3
 
-          # Create Futuristic GSAP Homepage
+          # FUTURISTIC HOMEPAGE
           cat << 'EOF' > public/index.html
           <!DOCTYPE html>
           <html lang="en">
           <head>
-              <meta charset="UTF-8" />
-              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
               <title>Pixel-by-Pixel Projects</title>
 
-              <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
+              <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
 
               <style>
                   body {
                       margin: 0;
-                      background: #020409;
-                      color: #00eaff;
+                      background: radial-gradient(circle at center, #00111a, #000000 70%);
                       font-family: 'Orbitron', sans-serif;
-                      display: flex;
-                      justify-content: center;
-                      align-items: center;
-                      min-height: 100vh;
+                      color: #00f6ff;
                       overflow: hidden;
                   }
-                  .wrapper {
+
+                  /* Glowing animated rings */
+                  .ring {
+                      position: absolute;
+                      border: 2px solid cyan;
+                      width: 200px;
+                      height: 200px;
+                      border-radius: 50%;
+                      left: 50%;
+                      top: 50%;
+                      transform: translate(-50%, -50%);
+                      animation: rotate 10s linear infinite;
+                      opacity: 0.2;
+                  }
+                  .ring:nth-child(2) { width: 260px; height: 260px; animation-duration: 14s; }
+                  .ring:nth-child(3) { width: 320px; height: 320px; animation-duration: 18s; }
+
+                  @keyframes rotate {
+                      from { transform: translate(-50%, -50%) rotate(0deg); }
+                      to { transform: translate(-50%, -50%) rotate(360deg); }
+                  }
+
+                  /* Center content */
+                  .content {
+                      position: relative;
+                      z-index: 2;
                       text-align: center;
-                      max-width: 900px;
-                      padding: 20px;
+                      margin-top: 15vh;
                   }
+
                   h1 {
-                      font-size: 40px;
-                      margin-bottom: 30px;
-                      text-shadow: 0 0 15px #00eaff, 0 0 30px #007bff;
+                      font-size: 46px;
+                      text-shadow: 0 0 15px #00eaff, 0 0 30px #00f6ff;
+                      margin-bottom: 50px;
                   }
-                  .project-list {
+
+                  .projects {
                       display: flex;
                       flex-direction: column;
-                      gap: 20px;
+                      gap: 25px;
+                      max-width: 600px;
+                      margin: auto;
                   }
-                  .project-card {
-                      padding: 20px;
-                      background: rgba(0, 20, 40, 0.6);
-                      border: 2px solid #00eaff;
-                      border-radius: 12px;
-                      cursor: pointer;
-                      font-size: 22px;
-                      text-decoration: none;
-                      color: #00eaff;
-                      transition: 0.3s ease-in-out;
-                      box-shadow: 0 0 15px #00111f;
-                  }
-                  .project-card:hover {
-                      background: #00eaff;
-                      color: #000;
-                      box-shadow: 0 0 20px #00eaff, 0 0 40px #00c8ff;
-                      transform: translateY(-5px) scale(1.05);
-                  }
-                  .bubble {
-                      position: absolute;
-                      border-radius: 50%;
-                      background: rgba(0, 255, 255, 0.1);
-                      animation: floatUp 12s infinite ease-in-out;
-                  }
-                  @keyframes floatUp {
-                      from { transform: translateY(100vh) scale(0.2); opacity: 0; }
-                      to { transform: translateY(-20vh) scale(1); opacity: 0.8; }
+
+                  .card {
+    padding: 20px;
+    font-size: 24px;
+    border: 2px solid #00f6ff;
+    border-radius: 10px;
+    background: rgba(0, 40, 60, 0.7);
+    text-decoration: none;
+    color: cyan;
+    box-shadow: 0 0 20px #00eaff;
+    transition: 0.35s ease;
+    opacity: 1 !important;
+}
+
+
+                  .card:hover {
+                      background: cyan;
+                      color: black;
+                      transform: translateY(-8px) scale(1.05);
+                      box-shadow: 0 0 25px cyan;
                   }
               </style>
           </head>
 
           <body>
 
-              <script>
-                  for (let i = 0; i < 20; i++) {
-                      const bubble = document.createElement('div');
-                      const size = Math.random() * 80 + 20;
-                      bubble.classList.add('bubble');
-                      bubble.style.width = `${size}px`;
-                      bubble.style.height = `${size}px`;
-                      bubble.style.left = `${Math.random() * 100}%`;
-                      bubble.style.animationDuration = `${8 + Math.random() * 10}s`;
-                      bubble.style.animationDelay = `${Math.random() * 5}s`;
-                      document.body.appendChild(bubble);
-                  }
-              </script>
+              <div class="ring"></div>
+              <div class="ring"></div>
+              <div class="ring"></div>
 
-              <div class="wrapper">
-                  <h1 id="title">🚀 Pixel-by-Pixel WebDev Projects</h1>
+              <div class="content">
+                  <h1 id="title">🚀 Pixel-by-Pixel Projects</h1>
 
-                  <div class="project-list">
-                      <a href="./WebWeaver2/" class="project-card">WebWeaver 2</a>
-                      <a href="./WebWeaver3/" class="project-card">WebWeaver 3</a>
+                  <div class="projects">
+                      <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver2/">WebWeaver 2</a>
+                      <a class="card" href="https://shashank07-debug.github.io/pixel-by-pixel/WebWeaver3/">WebWeaver 3</a>
                   </div>
               </div>
 
               <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
-              <script>
-                  const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+           <script>
+    gsap.from("#title", { opacity: 0, y: -40, duration: 1.2, ease: "power3.out" });
+    gsap.from(".card", { opacity: 0, y: 40, duration: 1, stagger: 0.25, ease: "power3.out" });
+    gsap.to(".card", { opacity: 1, duration: 0.1 });
+</script>
 
-                  tl.from("#title", {
-                      opacity: 0,
-                      y: -50,
-                      duration: 1
-                  })
-                  .from(".project-card", {
-                      opacity: 0,
-                      y: 50,
-                      stagger: 0.2,
-                      duration: 0.8
-                  });
-              </script>
 
           </body>
           </html>
