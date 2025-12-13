@@ -1,0 +1,25 @@
+name: Deploy Multiple WebWeaver Projects
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Prepare a folder that GitHub Pages will publish
+      - name: Prepare publish folder
+        run: |
+          mkdir public
+          cp -r WebDev-v3/WebWeaver2 public/WebWeaver2
+          cp -r WebDev-v3/WebWeaver3 public/WebWeaver3
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
