@@ -2,41 +2,470 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pixel by Pixel – WebWeaver Projects</title>
-  < style>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background: #0f172a;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0d1117;
       color: #fff;
-      padding: 40px;
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
     }
-    h1 {
-      margin-bottom: 20px;
+
+    /* Futuristic grid background */
+    .grid-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(56, 189, 248, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56, 189, 248, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      z-index: 1;
+      pointer-events: none;
     }
-    a {
-      display: block;
-      margin: 10px 0;
-      color: #38bdf8;
+
+    /* Animated gradient orbs */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.4;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .orb1 {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.4), transparent);
+      top: -200px;
+      left: -200px;
+      animation: float1 20s ease-in-out infinite;
+    }
+
+    .orb2 {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.4), transparent);
+      bottom: -150px;
+      right: -150px;
+      animation: float2 25s ease-in-out infinite;
+    }
+
+    .orb3 {
+      width: 350px;
+      height: 350px;
+      background: radial-gradient(circle, rgba(14, 165, 233, 0.3), transparent);
+      top: 50%;
+      left: 50%;
+      animation: float3 30s ease-in-out infinite;
+    }
+
+    @keyframes float1 {
+      0%, 100% { transform: translate(0, 0); }
+      33% { transform: translate(100px, 100px); }
+      66% { transform: translate(-50px, 150px); }
+    }
+
+    @keyframes float2 {
+      0%, 100% { transform: translate(0, 0); }
+      33% { transform: translate(-100px, -100px); }
+      66% { transform: translate(50px, -150px); }
+    }
+
+    @keyframes float3 {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.2); }
+    }
+
+    /* Scanline effect */
+    .scanline {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.5), transparent);
+      animation: scan 3s linear infinite;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    @keyframes scan {
+      0% { transform: translateY(0); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(100vh); opacity: 0; }
+    }
+
+    /* Container */
+    .container {
+      position: relative;
+      z-index: 2;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 40px 60px;
+    }
+
+    /* Header Section */
+    header {
+      text-align: center;
+      margin-bottom: 100px;
+      opacity: 0;
+    }
+
+    .logo {
+      font-size: 4rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #38bdf8 0%, #8b5cf6 50%, #0ea5e9 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 15px;
+      letter-spacing: -2px;
+      position: relative;
+    }
+
+    .logo::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #38bdf8, transparent);
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.8);
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: #64748b;
+      font-weight: 300;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+
+    /* Projects Grid */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      margin-top: 50px;
+    }
+
+    .project-card {
+      position: relative;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: 16px;
+      padding: 40px 30px;
       text-decoration: none;
-      font-size: 18px;
+      color: #fff;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(50px);
+      backdrop-filter: blur(10px);
     }
-    a:hover {
-      text-decoration: underline;
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.1), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .project-card:hover::before {
+      left: 100%;
+    }
+
+    .project-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 16px;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.5), rgba(139, 92, 246, 0.5));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .project-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(56, 189, 248, 0.5);
+      box-shadow: 0 20px 60px rgba(56, 189, 248, 0.2),
+                  0 0 40px rgba(56, 189, 248, 0.1);
+    }
+
+    .project-card:hover::after {
+      opacity: 1;
+    }
+
+    .project-number {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: rgba(56, 189, 248, 0.3);
+      margin-bottom: 20px;
+      display: block;
+      font-family: 'Courier New', monospace;
+    }
+
+    .project-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #e2e8f0;
+      letter-spacing: 1px;
+    }
+
+    .project-desc {
+      font-size: 0.95rem;
+      color: #94a3b8;
+      line-height: 1.6;
+    }
+
+    .arrow {
+      position: absolute;
+      bottom: 25px;
+      right: 25px;
+      font-size: 1.5rem;
+      color: #38bdf8;
+      transition: transform 0.3s ease;
+      text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+    }
+
+    .project-card:hover .arrow {
+      transform: translateX(8px);
+      color: #8b5cf6;
+    }
+
+    /* Hexagon decorations */
+    .hex-pattern {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      opacity: 0.02;
+      pointer-events: none;
+      z-index: 1;
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 10 L85 30 L85 70 L50 90 L15 70 L15 30 Z' fill='none' stroke='%2338bdf8' stroke-width='1'/%3E%3C/svg%3E");
+      background-size: 100px 100px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .logo {
+        font-size: 2.5rem;
+      }
+      
+      .subtitle {
+        font-size: 0.9rem;
+        letter-spacing: 2px;
+      }
+      
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .container {
+        padding: 60px 20px 40px;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="grid-background"></div>
+  <div class="hex-pattern"></div>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+  <div class="scanline"></div>
 
-  <h1>🚀 Pixel by Pixel – WebWeaver Projects</h1>
+  <div class="container">
+    <header id="header">
+      <h1 class="logo">🚀 PIXEL BY PIXEL</h1>
+      <p class="subtitle">Frontend Practice Projects</p>
+    </header>
 
-  <a href="WebDev-v3/WebWeaver1/">WebWeaver 1</a>
-  <a href="WebDev-v3/WebWeaver2/">WebWeaver 2</a>
-  <a href="WebDev-v3/WebWeaver3/">WebWeaver 3</a>
-  <a href="WebDev-v3/WebWeaver4/">WebWeaver 4</a>
-  <a href="WebDev-v3/WebWeaver5/">WebWeaver 5</a>
-  <a href="WebDev-v3/WebWeaver6/">WebWeaver 6</a>
-  <a href="WebDev-v3/WebWeaver7/">WebWeaver 7</a>
-  <a href="WebDev-v3/WebWeaver8/">WebWeaver 8</a>
+    <div class="projects-grid" id="projects">
+      <a href="WebDev-v3/WebWeaver1/" class="project-card">
+        <span class="project-number">01</span>
+        <h2 class="project-title">WebWeaver 1</h2>
+        <p class="project-desc">First steps into web development magic</p>
+        <span class="arrow">→</span>
+      </a>
 
+      <a href="WebDev-v3/WebWeaver2/" class="project-card">
+        <span class="project-number">02</span>
+        <h2 class="project-title">WebWeaver 2</h2>
+        <p class="project-desc">Advancing through creative challenges</p>
+        <span class="arrow">→</span>
+      </a>
+
+      <a href="WebDev-v3/WebWeaver3/" class="project-card">
+        <span class="project-number">03</span>
+        <h2 class="project-title">WebWeaver 3</h2>
+        <p class="project-desc">Building interactive experiences</p>
+        <span class="arrow">→</span>
+      </a>
+
+      <a href="WebDev-v3/WebWeaver4/" class="project-card">
+        <span class="project-number">04</span>
+        <h2 class="project-title">WebWeaver 4</h2>
+        <p class="project-desc">Mastering modern techniques</p>
+        <span class="arrow">→</span>
+      </a>
+
+      <a href="WebDev-v3/WebWeaver5/" class="project-card">
+        <span class="project-number">05</span>
+        <h2 class="project-title">WebWeaver 5</h2>
+        <p class="project-desc">Pushing creative boundaries</p>
+        <span class="arrow">→</span>
+      </a>
+
+      <a href="WebDev-v3/WebWeaver6/" class="project-card">
+        <span class="project-number">06</span>
+        <h2 class="project-title">WebWeaver 6</h2>
+        <p class="project-desc">Crafting polished interfaces</p>
+        <span class="arrow">→</span>
+      </a>
+
+      <a href="WebDev-v3/WebWeaver7/" class="project-card">
+        <span class="project-number">07</span>
+        <h2 class="project-title">WebWeaver 7</h2>
+        <p class="project-desc">Exploring advanced animations</p>
+        <span class="arrow">→</span>
+      </a>
+
+      <a href="WebDev-v3/WebWeaver8/" class="project-card">
+        <span class="project-number">08</span>
+        <h2 class="project-title">WebWeaver 8</h2>
+        <p class="project-desc">The ultimate project showcase</p>
+        <span class="arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  
+  <script>
+    // GSAP Animations
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Header animation
+    gsap.to('#header', {
+      opacity: 1,
+      y: 0,
+      duration: 1.5,
+      ease: 'power3.out',
+      delay: 0.3
+    });
+
+    // Project cards stagger animation
+    const cards = document.querySelectorAll('.project-card');
+    gsap.to(cards, {
+      opacity: 1,
+      y: 0,
+      duration: 1,
+      stagger: 0.15,
+      ease: 'power3.out',
+      delay: 0.8
+    });
+
+    // Card hover animations with GSAP
+    cards.forEach(card => {
+      const number = card.querySelector('.project-number');
+      const title = card.querySelector('.project-title');
+      
+      card.addEventListener('mouseenter', () => {
+        gsap.to(number, {
+          scale: 1.2,
+          color: '#38bdf8',
+          duration: 0.4,
+          ease: 'back.out(2)'
+        });
+        gsap.to(title, {
+          x: 5,
+          duration: 0.3,
+          ease: 'power2.out'
+        });
+      });
+
+      card.addEventListener('mouseleave', () => {
+        gsap.to(number, {
+          scale: 1,
+          color: 'rgba(56, 189, 248, 0.3)',
+          duration: 0.4,
+          ease: 'power2.out'
+        });
+        gsap.to(title, {
+          x: 0,
+          duration: 0.3,
+          ease: 'power2.out'
+        });
+      });
+    });
+
+    // Parallax effect on orbs
+    gsap.to('.orb1', {
+      y: 100,
+      x: 50,
+      scrollTrigger: {
+        trigger: 'body',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 1
+      }
+    });
+
+    gsap.to('.orb2', {
+      y: -100,
+      x: -50,
+      scrollTrigger: {
+        trigger: 'body',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 1
+      }
+    });
+
+    // Glitch effect on logo (occasional)
+    setInterval(() => {
+      if (Math.random() > 0.95) {
+        gsap.to('.logo', {
+          x: Math.random() * 4 - 2,
+          duration: 0.05,
+          repeat: 5,
+          yoyo: true,
+          onComplete: () => {
+            gsap.to('.logo', { x: 0, duration: 0.1 });
+          }
+        });
+      }
+    }, 3000);
+  </script>
 </body>
 </html>
