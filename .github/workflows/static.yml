@@ -1,5 +1,4 @@
-# Simple workflow for deploying static content to GitHub Pages
-name: Deploy WebWeaver2 & WebWeaver3
+name: Deploy WebWeaver Projects with Futuristic Homepage
 
 on:
   push:
@@ -23,20 +22,135 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      # ⭐ Create a public output folder and copy both projects into it
+      # Prepare publish folder and copy projects
       - name: Prepare publish folder
         run: |
           mkdir public
           cp -r WebDev-v3/WebWeaver2 public/WebWeaver2
           cp -r WebDev-v3/WebWeaver3 public/WebWeaver3
 
+          # Create Futuristic GSAP Homepage
+          cat << 'EOF' > public/index.html
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+              <meta charset="UTF-8" />
+              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+              <title>Pixel-by-Pixel Projects</title>
+
+              <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
+
+              <style>
+                  body {
+                      margin: 0;
+                      background: #020409;
+                      color: #00eaff;
+                      font-family: 'Orbitron', sans-serif;
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                      min-height: 100vh;
+                      overflow: hidden;
+                  }
+                  .wrapper {
+                      text-align: center;
+                      max-width: 900px;
+                      padding: 20px;
+                  }
+                  h1 {
+                      font-size: 40px;
+                      margin-bottom: 30px;
+                      text-shadow: 0 0 15px #00eaff, 0 0 30px #007bff;
+                  }
+                  .project-list {
+                      display: flex;
+                      flex-direction: column;
+                      gap: 20px;
+                  }
+                  .project-card {
+                      padding: 20px;
+                      background: rgba(0, 20, 40, 0.6);
+                      border: 2px solid #00eaff;
+                      border-radius: 12px;
+                      cursor: pointer;
+                      font-size: 22px;
+                      text-decoration: none;
+                      color: #00eaff;
+                      transition: 0.3s ease-in-out;
+                      box-shadow: 0 0 15px #00111f;
+                  }
+                  .project-card:hover {
+                      background: #00eaff;
+                      color: #000;
+                      box-shadow: 0 0 20px #00eaff, 0 0 40px #00c8ff;
+                      transform: translateY(-5px) scale(1.05);
+                  }
+                  .bubble {
+                      position: absolute;
+                      border-radius: 50%;
+                      background: rgba(0, 255, 255, 0.1);
+                      animation: floatUp 12s infinite ease-in-out;
+                  }
+                  @keyframes floatUp {
+                      from { transform: translateY(100vh) scale(0.2); opacity: 0; }
+                      to { transform: translateY(-20vh) scale(1); opacity: 0.8; }
+                  }
+              </style>
+          </head>
+
+          <body>
+
+              <script>
+                  for (let i = 0; i < 20; i++) {
+                      const bubble = document.createElement('div');
+                      const size = Math.random() * 80 + 20;
+                      bubble.classList.add('bubble');
+                      bubble.style.width = `${size}px`;
+                      bubble.style.height = `${size}px`;
+                      bubble.style.left = `${Math.random() * 100}%`;
+                      bubble.style.animationDuration = `${8 + Math.random() * 10}s`;
+                      bubble.style.animationDelay = `${Math.random() * 5}s`;
+                      document.body.appendChild(bubble);
+                  }
+              </script>
+
+              <div class="wrapper">
+                  <h1 id="title">🚀 Pixel-by-Pixel WebDev Projects</h1>
+
+                  <div class="project-list">
+                      <a href="./WebWeaver2/" class="project-card">WebWeaver 2</a>
+                      <a href="./WebWeaver3/" class="project-card">WebWeaver 3</a>
+                  </div>
+              </div>
+
+              <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+              <script>
+                  const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+                  tl.from("#title", {
+                      opacity: 0,
+                      y: -50,
+                      duration: 1
+                  })
+                  .from(".project-card", {
+                      opacity: 0,
+                      y: 50,
+                      stagger: 0.2,
+                      duration: 0.8
+                  });
+              </script>
+
+          </body>
+          </html>
+          EOF
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      # ⭐ Upload only the prepared public folder
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
