@@ -149,6 +149,7 @@ img{
     padding: 20px;
 }
 
+
 @media (max-width: 1024px) {
 
     #main {
@@ -172,16 +173,24 @@ img{
     }
 }
 
+
+
 @media (max-width: 768px) {
 
     html, body {
+        height: auto;
         background-color: #eee;
     }
 
     #main {
+        position: static;
+        transform: none;
+        top: auto;
+        left: auto;
+        margin: 20px auto;
         width: 95%;
         height: auto;
-        padding-bottom: 80px;
+        padding-bottom: 40px;
         border-radius: 20px;
     }
 
@@ -189,6 +198,7 @@ img{
         flex-direction: column;
         height: auto;
         gap: 12px;
+        padding: 15px;
     }
 
     #nav-part1,
@@ -199,74 +209,66 @@ img{
     }
 
     #main > h1 {
-        font-size: 48px;
         position: static;
         transform: none;
-        margin-top: 30px;
+        font-size: 48px;
+        line-height: 1.1;
+        margin: 30px 10px;
+        text-align: center;
     }
 
     img {
         position: static;
-        transform: none;
-        height: 280px;
-        width: 90%;
-        margin: 15px auto;
+        transform: none !important;
         display: block;
+        width: 90%;
+        height: auto;
+        max-height: 350px;
+        margin: 20px auto;
     }
 
-    #img1,
-    #img2,
-    #img3,
-    #img4 {
-        transform: none;
-    }
-
-    #btm-left {
-        position: static;
-        text-align: center;
-        margin-top: 20px;
-    }
-
-    #btm-right {
-        position: static;
-        text-align: center;
-        margin-top: 10px;
-    }
-
+    #btm-left,
+    #btm-right,
     #btm-center {
         position: static;
         text-align: center;
         margin-top: 20px;
     }
 
+    #btm-right i {
+        font-size: 22px;
+        padding: 6px;
+    }
+
     #btm-center i {
-        padding: 15px;
-        font-size: 24px;
+        font-size: 22px;
+        padding: 14px;
     }
 }
+
 
 @media (max-width: 480px) {
 
     #main > h1 {
-        font-size: 36px;
+        font-size: 34px;
     }
 
     img {
-        height: 240px;
+        max-height: 280px;
     }
 
     #nav h1 {
-        font-size: 16px;
+        font-size: 15px;
     }
 
     #nav h3,
     #nav i {
-        font-size: 14px;
-        padding: 4px;
+        font-size: 13px;
+        padding: 5px;
     }
 
     #nav button {
-        padding: 6px 10px;
-        font-size: 14px;
+        font-size: 13px;
+        padding: 6px 12px;
     }
 }
