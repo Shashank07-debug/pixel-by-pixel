@@ -148,3 +148,125 @@ img{
     border-radius: 60px;
     padding: 20px;
 }
+
+@media (max-width: 1024px) {
+
+    #main {
+        width: 95%;
+        height: 95%;
+        border-radius: 25px;
+    }
+
+    #main > h1 {
+        font-size: 90px;
+    }
+
+    img {
+        height: 360px;
+        width: 300px;
+    }
+
+    #nav {
+        height: 90px;
+        padding: 0 20px;
+    }
+}
+
+@media (max-width: 768px) {
+
+    html, body {
+        background-color: #eee;
+    }
+
+    #main {
+        width: 95%;
+        height: auto;
+        padding-bottom: 80px;
+        border-radius: 20px;
+    }
+
+    #nav {
+        flex-direction: column;
+        height: auto;
+        gap: 12px;
+    }
+
+    #nav-part1,
+    #nav-part2,
+    #nav-part3 {
+        display: flex;
+        gap: 10px;
+    }
+
+    #main > h1 {
+        font-size: 48px;
+        position: static;
+        transform: none;
+        margin-top: 30px;
+    }
+
+    img {
+        position: static;
+        transform: none;
+        height: 280px;
+        width: 90%;
+        margin: 15px auto;
+        display: block;
+    }
+
+    #img1,
+    #img2,
+    #img3,
+    #img4 {
+        transform: none;
+    }
+
+    #btm-left {
+        position: static;
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    #btm-right {
+        position: static;
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    #btm-center {
+        position: static;
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    #btm-center i {
+        padding: 15px;
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    #main > h1 {
+        font-size: 36px;
+    }
+
+    img {
+        height: 240px;
+    }
+
+    #nav h1 {
+        font-size: 16px;
+    }
+
+    #nav h3,
+    #nav i {
+        font-size: 14px;
+        padding: 4px;
+    }
+
+    #nav button {
+        padding: 6px 10px;
+        font-size: 14px;
+    }
+}
