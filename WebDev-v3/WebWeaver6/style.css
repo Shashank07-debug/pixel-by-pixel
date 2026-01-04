@@ -170,29 +170,3 @@ html, body{
     font-weight: 400;
 }
 
-@media (max-width: 1024px){
-
-    #intro h1{
-        font-size: 60px;
-        line-height: 58px;
-    }
-
-    #about h2{
-        font-size: 42px;
-        line-height: 44px;
-    }
-
-    #icons{
-        margin-top: 80px;
-    }
-
-    #work{
-        height: auto;
-        padding: 30px;
-    }
-
-    .work2-part{
-        padding: 20px;
-    }
-}
-
